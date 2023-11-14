@@ -11,8 +11,8 @@ public class Store {
         this.customers = new ArrayList<>();
     }
 
-    public void addProduct(String name, double price) {
-        Product product = new Product(name, price);
+    public void addProduct(String name, double price, int amount) {
+        Product product = new Product(name, price, amount);
         products.add(product);
         System.out.println("Product " + name + " added to the store.");
     }
@@ -105,7 +105,7 @@ public class Store {
     private void showProducts() {
         System.out.println("List of products:");
         for (Product product : products) {
-            System.out.println(product.getName() + " - " + product.getPrice());
+            System.out.println(product.getName() + " - " + product.getPrice() + " $ " + "Amount: " + product.getAmount());
         }
     }
 
@@ -116,10 +116,16 @@ public class Store {
             System.out.print("Enter the name of the product you want to buy: ");
             String productName = new Scanner(System.in).next();
             Product product = findProduct(productName);
-            if (product != null) {
+            if (product != null && product.changeAmount()) {
                 customer.purchaseProduct(product);
+                if (product.getAmount() == 0) {
+                    products.remove(product);
+                    System.out.println("Product " + product.getName() + " is out of stock. We have removed it for now.");
+                }
+            } else if (product == null) {
+                System.out.println("Product is not found.");
             } else {
-                System.out.println("Product not found.");
+                System.out.println("Product is out of stock for now");
             }
         }
     }
@@ -161,7 +167,9 @@ public class Store {
         String name = new Scanner(System.in).next();
         System.out.print("Enter the price of the product: ");
         double price = new Scanner(System.in).nextDouble();
-        addProduct(name, price);
+        System.out.print("Enter amount of the product: ");
+        int amount = new Scanner(System.in).nextInt();
+        addProduct(name, price, amount);
     }
 
     private Customer chooseCustomer() {
