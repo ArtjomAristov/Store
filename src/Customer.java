@@ -5,11 +5,14 @@ public class Customer {
     private String name;
     private double balance;
     private List<Product> purchasedProducts;
+    private int rating;
+
 
     public Customer(String name, double balance) {
         this.name = name;
         this.balance = balance;
         this.purchasedProducts = new ArrayList<>();
+        this.rating = 0;
     }
 
     public String getName() {
@@ -29,13 +32,21 @@ public class Customer {
         System.out.println("User " + name + " balance increased by " + amount + ". New balance: " + balance);
     }
 
-    public void purchaseProduct(Product product) {
+    public void purchaseProduct(Product product, int amountBuy) {
         if (balance >= product.getPrice()) {
             purchasedProducts.add(product);
-            balance -= product.getPrice();
+            balance -= product.getPrice() * amountBuy;
             System.out.println(name + " bought " + product.getName() + " for " + product.getPrice() + ". Balance balance: " + balance);
         } else {
             System.out.println(name + " cannot afford to buy " + product.getName() + ". Insufficient funds.");
         }
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void increaseRating(int amount) {
+        rating += amount;
     }
 }
