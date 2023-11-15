@@ -54,6 +54,8 @@ public class Store {
             System.out.println("6. Add money to user");
             System.out.println("7. Add product to store");
             System.out.println("8. Always display the cost of all items sold");
+            System.out.println("9. Show rating of customers");
+            System.out.println("10. Show product popularity");
             System.out.println("0. Exit");
 
             System.out.print("Select menu item: ");
@@ -84,6 +86,12 @@ public class Store {
                 case 8:
                     displaySoldProducts();
                     break;
+                case 9:
+                    showCustomerRatings();
+                    break;
+                case 10:
+                    showProductPopularityRatings();
+                    break;
                 case 0:
                     System.out.println("Exit the program.");
                     break;
@@ -91,6 +99,18 @@ public class Store {
                     System.out.println("Invalid selection. Please enter a valid menu item.");
             }
         } while (choice != 0);
+    }
+
+    private void showCustomerRatings() {
+        for (Customer customer : customers) {
+            System.out.print(customer.getName() + " - " + customer.getRating());
+        }
+    }
+    private void showProductPopularityRatings() {
+        System.out.println("Product popularity ratngs");
+        for (Product product : products) {
+            System.out.println(product.getName() + " - " + product.getPopularity());
+        }
     }
 
     private void addUser() {
@@ -108,6 +128,12 @@ public class Store {
             System.out.println(product.getName() + " - " + product.getPrice() + " $ " + "Amount: " + product.getAmount());
         }
     }
+    public void updateCustomerRating(Customer customer, int purchasedAmount) {
+        customer.increaseRating(purchasedAmount);
+    }
+    public void updateProductPopularity(Product product, int purchasedAmount) {
+        product.increasePopularity(purchasedAmount);
+    }
 
     private void buyProduct() {
         Customer customer = chooseCustomer();
@@ -117,10 +143,23 @@ public class Store {
             String productName = new Scanner(System.in).next();
             Product product = findProduct(productName);
             if (product != null && product.changeAmount()) {
-                customer.purchaseProduct(product);
-                if (product.getAmount() == 0) {
-                    products.remove(product);
-                    System.out.println("Product " + product.getName() + " is out of stock. We have removed it for now.");
+                System.out.print("Enter the amount of product you want to buy: ");
+                int amountBuy = new Scanner(System.in).nextInt();
+
+                if (amountBuy > 0 && amountBuy <= product.getAmount()) {
+                    customer.purchaseProduct(product, amountBuy);
+                    product.setAmount(product.getAmount() - amountBuy);
+
+                    updateCustomerRating(customer, amountBuy);
+                    updateProductPopularity(product, amountBuy);
+
+                    if (product.getAmount() == 0) {
+                        products.remove(product);
+                        System.out.println("Product " + product.getName() + " is out of stock. We have removed it for now.");
+
+                    }
+                } else {
+                    System.out.print("Invalid amount");
                 }
             } else if (product == null) {
                 System.out.println("Product is not found.");
@@ -207,4 +246,6 @@ public class Store {
         Store store = new Store();
         store.showMenu();
     }
-}
+
+    }
+
