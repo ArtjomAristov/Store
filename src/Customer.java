@@ -32,6 +32,11 @@ public class Customer {
         System.out.println("User " + name + " balance increased by " + amount + ". New balance: " + balance);
     }
 
+    public void setBalance(double newBalance) {
+        this.balance = newBalance;
+    }
+
+
     public void purchaseProduct(Product product, int amountBuy) {
         if (balance >= product.getPrice()) {
             purchasedProducts.add(product);
