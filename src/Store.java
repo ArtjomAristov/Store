@@ -56,6 +56,8 @@ public class Store {
             System.out.println("8. Always display the cost of all items sold");
             System.out.println("9. Show rating of customers");
             System.out.println("10. Show product popularity");
+            System.out.println("11. Edit product");
+            System.out.println("12. Edit user");
             System.out.println("0. Exit");
 
             System.out.print("Select menu item: ");
@@ -92,6 +94,12 @@ public class Store {
                 case 10:
                     showProductPopularityRatings();
                     break;
+                case 11:
+                    editProduct();
+                    break;
+                case 12:
+                    editUser();
+                    break;
                 case 0:
                     System.out.println("Exit the program.");
                     break;
@@ -101,6 +109,37 @@ public class Store {
         } while (choice != 0);
     }
 
+    private void editProduct() {
+        showProducts();
+        System.out.print("Enter the name of the product you want to edit: ");
+        String productName = new Scanner(System.in).next();
+        Product product = findProduct(productName);
+
+        if (product != null) {
+            System.out.print("Enter the new amount for the product: ");
+            int newAmount = new Scanner(System.in).nextInt();
+            product.setAmount(newAmount);
+            System.out.println("Product " + product.getName() + " amount updated to " + newAmount);
+        } else {
+            System.out.println("Product is not found.");
+        }
+    }
+
+    private void editUser() {
+        showCustomers();
+        System.out.print("Enter the name of the user you want to edit: ");
+        String userName = new Scanner(System.in).next();
+        Customer user = findCustomer(userName);
+
+        if (user != null) {
+            System.out.print("Enter the new balance for the user: ");
+            double newBalance = new Scanner(System.in).nextDouble();
+            user.setBalance(newBalance);
+            System.out.println("User " + user.getName() + " balance updated to " + newBalance);
+        } else {
+            System.out.println("User not found.");
+        }
+    }
     private void showCustomerRatings() {
         for (Customer customer : customers) {
             System.out.print(customer.getName() + " - " + customer.getRating());
@@ -247,5 +286,4 @@ public class Store {
         store.showMenu();
     }
 
-    }
-
+}
